@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: 我的天气应用 API 文档
+  description: 这是一个示例。
+  version: 1.0.0
+
+paths:                     # 【大盒子】所有接口的路径都写在这里
+  /api/weather:            # 【接口地址】对应上周 XML 里的请求地址
+    get:                   # 【请求方式】GET 代表“向服务器要数据”（点菜）
+      summary: 获取实时天气  # 接口的简短标题
+      description: 通过城市名称，获取该城市当前的实时天气数据。
+      parameters:          # 【参数盒子】开始写点菜的要求（对应上周的表格）
+        - name: city       # 参数名字叫 city
+          in: query        # 这个参数放在 URL 链接里传输
+          required: true   # true 代表“是，必填”
+          description: 需要查询的城市英文拼音，例如：shanghai
+          schema:
+            type: string   # 限制只能输入字符串（文字）
+            
+        - name: unit       # 第二个参数叫 unit
+          in: query
+          required: false  # false 代表“否，选填”
+          description: 温度单位。c 代表摄氏度，f 代表华氏度。默认是 c。
+          schema:
+            type: string
+            default: c     # 默认值是 c
+            
+      responses:           # 【响应盒子】厨房端出来的菜
+        '200':             # 200 是网络世界的暗号，代表“成功”
+          description: 成功获取天气数据
+          content:
+            application/json:
+              example:
+                city: "Shanghai"
+                temperature: 26
+                weather_condition: "Sunny"
+                is_rainy: false
