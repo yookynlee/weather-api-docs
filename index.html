@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Charlotte 的技术文档作品集 - Weather API</title>
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4/swagger-ui.css">
+</head>
+<body>
+    <div id="swagger-ui"></div>
+
+    <script src="https://unpkg.com/swagger-ui-dist@4/swagger-ui-bundle.js"></script>
+    <script>
+        window.onload = function() {
+            // 告诉大脑：去读取同文件夹下的 openapi.yaml 并渲染出来！
+            SwaggerUIBundle({
+                url: "./openapi.yaml",
+                dom_id: '#swagger-ui'
+            });
+        }
+    </script>
+</body>
+</html>
