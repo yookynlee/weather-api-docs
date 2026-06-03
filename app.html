@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>我的第一个 JS 天气小工具</title>
+    <style>
+        /* 这里是极简的 CSS，让网页好看一点 */
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        button { padding: 10px; font-size: 16px; margin: 5px; }
+        input { 
+        padding: 10px; 
+        font-size: 16px; 
+        margin: 5px; 
+        width: 260px;        /* 关键：把衣服改大，字就能装下了 */
+        border: 1px solid #ccc; 
+        border-radius: 4px; /* 让边框带一点点圆角，更现代 */
+        }
+        #weather-box { margin-top: 20px; font-size: 20px; color: #007bff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1>🌦️ 简易天气查询器</h1>
+    
+    <input type="text" id="city-input" placeholder="请输入城市拼音（如 shanghai）">
+    <button id="search-btn">查询天气</button>
+    <div id="weather-box"></div>
+
+    <script>
+        const button = document.getElementById('search-btn');
+        const input = document.getElementById('city-input');
+        const box = document.getElementById('weather-box');
+
+        button.addEventListener('click', function() {
+            const cityName = input.value; 
+
+            if (cityName === "") {
+                box.innerText = "❌ 请输入城市名称再查询哦！";
+                return;
+            }
+
+            box.innerText = "⏳ 正在努力向气象局查询中...";
+
+            // 【核心大杀器：fetch】
+            // 我们借用一个互联网上免费的、不需要注册的天气接口
+            fetch('https://wttr.in/' + cityName + '?format=j1')
+                // 步骤 A：服务员把盘子端回来了，我们先告诉它：“把这盘菜用 JSON 格式打开”
+                .then(response => response.json())
+                
+                // 步骤 B：盘子打开了，里面全是真实的数据（我们叫它 data）
+                .then(data => {
+                    // 从这个庞大的真实数据包裹里，一层层挖出我们想要的温度和天气
+                    // 注：这些挖数据的路径，就是我们写 API 文档时要看懂的
+                    const temp = data.current_condition[0].temp_C; // 摄氏度
+                    const text = data.current_condition[0].weatherDesc[0].value; // 天气状态（英文）
+
+                    // 【大功告成】把挖出来的真实数据，啪的一声贴在网页上！
+                    box.innerHTML = "🎉 查询成功！当前天气是：<b>" + text + "</b>，实时温度：<b>" + temp + " °C</b>";
+                })
+                
+                // 步骤 C：如果网络坏了或者城市拼音输错了，抓取错误并报错
+                .catch(error => {
+                    box.innerText = "❌ 糟糕，查询失败了。请检查城市拼音是否正确！";
+                    console.error(error);
+                });
+        });
+    </script>
+
+</body>
+</html>
